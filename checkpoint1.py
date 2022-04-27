@@ -3,7 +3,7 @@ Wesleyan University, COMP 343, Spring 2022
 final project: checkpoint1
 Name: Andres Cojuangco and Peter Fulweiler
 '''
-
+import perceptron
 # Helper functions
 
 """
@@ -12,7 +12,8 @@ the get_ID3_accuracy and get_ID3_num_correct functions that we implemented in
 class.
 """
 
-## Bootstrap
+# Bootstrap
+
 
 def bootstrapping():
     """
@@ -21,9 +22,10 @@ def bootstrapping():
     dataset will have y number of examples.
     """
 
-## Everything for Decision Trees
+# Everything for Decision Trees
 
 # Making predictions with only decision trees
+
 
 def build_decision_trees():
     """
@@ -32,11 +34,13 @@ def build_decision_trees():
     features).
     """
 
+
 def ID3_decision_tree_predictions():
     """
     Takes modified ID3 decision tree algorithm to make predictions for each
     decision tree. This makes predictions for all examples in a dataframe
     """
+
 
 def ID3_decision_tree_prediction():
     """
@@ -44,7 +48,7 @@ def ID3_decision_tree_prediction():
     decision tree. This makes a prediction for one example in a dataframe.
     """
 
-## Everything for Perceptrons
+# Everything for Perceptrons
 
 
 # Making predictions with only perceptrons
@@ -55,31 +59,36 @@ def perceptron():
     per iteration
     """
 
+
 def get_perceptron_predictions():
     """
     Get's perceptron predictions for all examples in a dataframe
     """
+
 
 def get_perceptron_predictions():
     """
     Get's perceptron prediction for one example in a dataframe
     """
 
-## Making predictions with both perceptrons and decision trees
+# Making predictions with both perceptrons and decision trees
+
 
 def submodel_combination():
     """
     Takes half of the bootstrapped dataframes and makes predictions using decision
     trees and the other half makes predictions using perceptrons.
     """
-## Prediction
+# Prediction
+
 
 def final_prediction():
     """
     Tallies the predictions of the models and chooses the majority prediction
     """
-    
-## Data visualization
+
+# Data visualization
+
 
 """
 Will use a line plot to plot the accuracies of each set of submodels for bagging.
