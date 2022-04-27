@@ -1,2 +1,2 @@
 # randomForestGenerator
-Final Project For Machine Learning 2022
+Final Project For Machine Learning Spring 2022
