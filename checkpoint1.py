@@ -91,7 +91,7 @@ def final_prediction():
 
 
 """
-Will use a line plot to plot the accuracies of each set of submodels for bagging.
+Will use a line plot to plot the accuracies, recall, and precision of each set of submodels for bagging.
 One set will be all decision trees. One set will be all perceptrons. The last Set
 will be half perceptrons and half decision trees. We will be using two datasets:
 1 linearly separable data set and the other non-linearly separable data set.
