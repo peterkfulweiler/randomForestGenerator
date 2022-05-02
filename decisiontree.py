@@ -112,21 +112,6 @@ ID3 Algorithm
 
 """
 
-def ID3_decision_tree(df, features, label, max_depth):
-    ''' Inputs
-            * df: dataframe containing data
-            * features: current features to consider
-            * label: column name in df to use as label
-        Output
-            * dtree: root node of trained decision tree
-    '''
-    dtree = Node('root', '')
-    ID3_build_tree(df, features, label, dtree, max_depth)
-    #print_tree(dtree, 0)
-    return dtree
-
-# problem a
-
 root_node = Node('root')
 
 def ID3_build_tree(df, features, label, parent, max_depth):
@@ -165,9 +150,21 @@ def ID3_build_tree(df, features, label, parent, max_depth):
         # Remove the feature we just split on so we don't try to split on it again
         new_features = features.copy()
         new_features.remove(feature_to_split_on)
-        #print(new_features)
+
         # Recursively call build_tree on each child node
         for child in parent.children:
             ID3_build_tree(df[ df[feature_to_split_on] == child.feature_value ],
                     new_features, label, child,max_depth-1)
         depth_count -= 1
+
+def ID3_decision_tree(df, features, label, max_depth):
+    ''' Inputs
+            * df: dataframe containing data
+            * features: current features to consider
+            * label: column name in df to use as label
+        Output
+            * dtree: root node of trained decision tree
+    '''
+    dtree = Node('root', '')
+    ID3_build_tree(df, features, label, dtree, max_depth)
+    return dtree
