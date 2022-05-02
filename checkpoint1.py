@@ -3,8 +3,16 @@ Wesleyan University, COMP 343, Spring 2022
 final project: checkpoint1
 Name: Andres Cojuangco and Peter Fulweiler
 '''
+
+# Python modules
+import numpy as np
+import pandas as pd
+import random
+import sys
+import time
+
+# Helper libraries
 import perceptron
-# Helper functions
 
 """
 Helper functions will iniclude scikit's split_data function, scikit's get_accuracy, get_X_y_data, and
@@ -15,13 +23,20 @@ class.
 # Bootstrap
 
 
-def bootstrapping():
+def bootstrapping(df, x, y):
     """
     Takes a train dataset and gets x number random dataframe samples with replacement
     (i.e. some examples can be present in mulitple samples). Each bootstrapped
     dataset will have y number of examples.
+    Returns an array of subsets of the original dataframe
     """
+    bootstraps = []
+    for i in range(x):
+        indices = np.random.randint(0, len(df), size=y)
+        strap = df.iloc[indices]
+        bootstraps.append(strap)
 
+    return bootstraps
 # Everything for Decision Trees
 
 # Making predictions with only decision trees
