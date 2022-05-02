@@ -35,7 +35,8 @@ def build_decision_trees():
     """
 
 
-def ID3_decision_tree_predictions():
+
+def ID3_decision_tree_all():
     """
     Takes modified ID3 decision tree algorithm to make predictions for each
     decision tree. This makes predictions for all examples in a dataframe
@@ -60,13 +61,13 @@ def perceptron():
     """
 
 
-def get_perceptron_predictions():
+def get_perceptron_all():
     """
     Get's perceptron predictions for all examples in a dataframe
     """
 
 
-def get_perceptron_predictions():
+def get_perceptron_prediction():
     """
     Get's perceptron prediction for one example in a dataframe
     """

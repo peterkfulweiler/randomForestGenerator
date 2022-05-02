@@ -95,7 +95,7 @@ def information_gain(df, features, label):
             entropy = 0
             for _, num_label in num_label_fval.items():
                 prob = num_label/num_fval
-                entropy += - (prob)*log2(prob)
+                entropy += - (prob)*np.log2(prob)
             sum_entropy += (num_fval/num_instances) * entropy
 
         # Get feature with minimum entropy sum
@@ -157,14 +157,29 @@ def ID3_build_tree(df, features, label, parent, max_depth):
                     new_features, label, child,max_depth-1)
         depth_count -= 1
 
-def ID3_decision_tree(df, features, label, max_depth):
+def ID3_decision_tree(df, features, label, max_depth=5, random_subspace = None):
     ''' Inputs
             * df: dataframe containing data
-            * features: current features to consider
+            * features: list of current features to consider
             * label: column name in df to use as label
+            * max_depth: max depth of tree
+            * random_subspace: number of random features to be chosen
         Output
             * dtree: root node of trained decision tree
     '''
+    # get the number of columns of the dataframe
+    _, n_col = df.shape
+    # get the indeces of the columns excluding target column
+    n_col_indeces = list(range(n_col-1))
+    # check if random
+    if random_subspace != None:
+      n_col_indeces = random.sample(population = n_col_indeces, k = random_subspace)
+    # initialize empty list of random features
+    random_features = []
+    # append randomly chosen features to the random_features list
+    for index in n_col_indeces:
+      random_features.append(features[index])
+
     dtree = Node('root', '')
-    ID3_build_tree(df, features, label, dtree, max_depth)
+    ID3_build_tree(df, random_features, label, dtree, max_depth)
     return dtree
