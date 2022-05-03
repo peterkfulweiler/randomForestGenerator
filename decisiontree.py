@@ -186,6 +186,12 @@ def ID3_decision_tree(df, features, label, max_depth=5, random_subspace = None):
     return dtree
 
 def ID3_get_prediction(tree, example):
+    ''' Input:
+    * tree: a decision tree
+    * example: example from the datafreame
+    Output:
+    * a label 
+    '''
   if tree.children is None:
     print("one")
     return tree.feature_value

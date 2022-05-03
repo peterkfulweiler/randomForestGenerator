@@ -101,13 +101,11 @@ def final_prediction():
     Tallies the predictions of the models and chooses the majority prediction
     """
 
-# Main Algorithm
-
 def random_forest_algorithm(train_df, features, label, n_trees, n_bootstrap, n_features, max_depth):
     """ Inputs:
     * train_df: the training dataset
+    * features:
     * n_trees
-
     """
     forest = []
     for tree in range(n_trees):
