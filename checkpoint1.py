@@ -13,6 +13,7 @@ import time
 
 # Helper libraries
 import perceptron
+import decisiontree
 
 """
 Helper functions will iniclude scikit's split_data function, scikit's get_accuracy, get_X_y_data, and
@@ -23,20 +24,17 @@ class.
 # Bootstrap
 
 
-def bootstrapping(df, x, y):
+def bootstrapping(df, num_df):
     """
     Takes a train dataset and gets x number random dataframe samples with replacement
     (i.e. some examples can be present in mulitple samples). Each bootstrapped
     dataset will have y number of examples.
     Returns an array of subsets of the original dataframe
     """
-    bootstraps = []
-    for i in range(x):
-        indices = np.random.randint(0, len(df), size=y)
-        strap = df.iloc[indices]
-        bootstraps.append(strap)
-
-    return bootstraps
+    for i in range(num_df):
+        indices = np.random.randint(0, len(df), size=num_df)
+        df_bootstrapped = df.iloc[indices]
+    return df_bootstrapped
 # Everything for Decision Trees
 
 # Making predictions with only decision trees
@@ -102,6 +100,22 @@ def final_prediction():
     """
     Tallies the predictions of the models and chooses the majority prediction
     """
+
+# Main Algorithm
+
+def random_forest_algorithm(train_df, features, label, n_trees, n_bootstrap, n_features, max_depth):
+    """ Inputs:
+    * train_df: the training dataset
+    * n_trees
+
+    """
+    forest = []
+    for tree in range(n_trees):
+        df_bootstrapped = bootstrapping(train_df, n_bootstrap)
+        tree_id3 = ID3_decision_tree(df_bootstrapped, features, label, max_depth,n_features)
+        forest.append(tree_id3)
+    return forest
+
 
 # Data visualization
 

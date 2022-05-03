@@ -24,6 +24,7 @@ def print_tree(node, i):
 """
 HELPER FUNCTIONS
 """
+random.seed(1234)
 
 def get_children_from_fvals(df, f):
     ''' Inputs:
@@ -183,3 +184,19 @@ def ID3_decision_tree(df, features, label, max_depth=5, random_subspace = None):
     dtree = Node('root', '')
     ID3_build_tree(df, random_features, label, dtree, max_depth)
     return dtree
+
+def ID3_get_prediction(tree, example):
+  if tree.children is None:
+    print("one")
+    return tree.feature_value
+  else:
+    for child in tree.children:
+      fval = example[child.feature_name]
+      print(fval)
+      print("child.feature name:" + child.feature_name)
+      if child.feature_value == fval:
+        print("two")
+        return ID3_get_prediction(child,example)
+      elif child.children is None:
+        print("three")
+        return ID3_get_prediction(child,example)
