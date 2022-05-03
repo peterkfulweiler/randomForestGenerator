@@ -25,7 +25,6 @@ def main():
                 "Embarked Queenstown?", "Embarked Southampton?"}
     target = "Survived"
     filename = 'titanic-1.csv'
-    df = util.load_data(filename)
 
     # Split data into training and test
     train_proportion = 0.70
