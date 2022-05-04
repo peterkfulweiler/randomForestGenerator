@@ -105,7 +105,9 @@ def random_forest_algorithm(train_df, features, label, n_trees, n_bootstrap, n_f
     """ Inputs:
     * train_df: the training dataset
     * features:
-    * n_trees
+    * n_trees...
+    Output:
+    * forest: list of decision trees aka the random forest 
     """
     forest = []
     for tree in range(n_trees):

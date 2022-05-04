@@ -193,16 +193,16 @@ def ID3_get_prediction(tree, example):
     * a label 
     '''
   if tree.children is None:
-    print("one")
+    # print("one")
     return tree.feature_value
   else:
     for child in tree.children:
       fval = example[child.feature_name]
-      print(fval)
-      print("child.feature name:" + child.feature_name)
+      # print(fval)
+      # print("child.feature name:" + child.feature_name)
       if child.feature_value == fval:
-        print("two")
+        # print("two")
         return ID3_get_prediction(child,example)
       elif child.children is None:
-        print("three")
+        # print("three")
         return ID3_get_prediction(child,example)
