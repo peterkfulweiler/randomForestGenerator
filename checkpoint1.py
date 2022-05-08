@@ -107,8 +107,8 @@ def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_fe
         percept_w = perceptron.perceptron(
             X, Y, learning_rate, num_iterations)
         # return weights and random_features
-        perceptronforest.append(percept_w, random_features)
-    return perceptron_forrest
+        perceptronforest.append([percept_w, random_features])
+    return perceptronforest
 
 ############ COMBINATION FOREST ###############
 
@@ -143,7 +143,7 @@ def submodel_combination(train_df, features, label, n_submodels, n_bootstrap, n_
                 X, Y, learning_rate, num_iterations)
             # Append trained weights and random features
             # features are to make predictions later on.
-            perceptronforest.append(percept_w, random_features)
+            perceptronforest.append([percept_w, random_features])
 
     return forest, perceptronforest
 
