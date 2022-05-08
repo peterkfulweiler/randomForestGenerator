@@ -190,7 +190,7 @@ def ID3_get_prediction(tree, example):
     * tree: a decision tree
     * example: example from the datafreame
     Output:
-    * a label 
+    * a label
     '''
   if tree.children is None:
     # print("one")
@@ -206,3 +206,22 @@ def ID3_get_prediction(tree, example):
       elif child.children is None:
         # print("three")
         return ID3_get_prediction(child,example)
+
+def ID3_decision_tree_all(tree, df):
+    '''Input:
+    * tree: a decision tree
+    * df: a data frame
+    Output:
+    * predictions: a list of predictions for each example using a decision tree
+    '''
+  # get number of examples
+  num_examples = df.shape[0]
+  # initialize empty list of predictions
+  predictions = []
+  # loop through all of the examples
+  for example in range(num_examples):
+    # get prediction for one example
+    pred = ID3_decision_tree_prediction(tree,df.iloc[example])
+    # append to list of predictions
+    predictions.append(pred)
+  return predictions

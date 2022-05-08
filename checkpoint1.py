@@ -100,6 +100,26 @@ def final_prediction():
     """
     Tallies the predictions of the models and chooses the majority prediction
     """
+def get_random_forest_predictions(df, forest):
+    """ Inputs:
+    * df: a dataframe
+    * forest: a list of decision trees
+    Output:
+    * predictions: a list of predictions for each example by getting the majority
+    vote or mode of each prediction 
+    """
+  # initalize dictionary for predictions
+  random_forest_predictions = {}
+  # loop through every forest
+  for i in range(len(forest)):
+    # make the column names
+    col_name = "dtree_{}".format(i)
+    # get predictions for each example for one decision tree
+    pred = ID3_decision_tree_all(forest[i],df)
+    # add the prediction to the dictionary
+    random_forest_predictions[col_name] = pred
+    pred_df = pd.DataFrame(random_forest_predictions)
+  return pred_df.mode(axis=1)[0]
 
 def random_forest_algorithm(train_df, features, label, n_trees, n_bootstrap, n_features, max_depth):
     """ Inputs:
@@ -107,7 +127,7 @@ def random_forest_algorithm(train_df, features, label, n_trees, n_bootstrap, n_f
     * features:
     * n_trees...
     Output:
-    * forest: list of decision trees aka the random forest 
+    * forest: list of decision trees aka the random forest
     """
     forest = []
     for tree in range(n_trees):
