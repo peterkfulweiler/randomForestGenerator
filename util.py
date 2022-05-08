@@ -41,7 +41,7 @@ def randomize_features(features, random_subspace=None):
         feat = features[index]
         random_features.append(feat)
     """
-
+    # returns set
     return set(features)
 
 

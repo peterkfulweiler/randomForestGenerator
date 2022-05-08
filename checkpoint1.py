@@ -87,19 +87,30 @@ def get_perceptron_prediction():
 
 # Making predictions with both perceptrons and decision trees
 
+ ######## PERCEPTRON FOREST #############
 
-def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_features, max_depth, num_iterations, learning_rate):
 
+def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_features, num_iterations, learning_rate):
+    """
+    Creates a Random Perceptron Forest with 
+    """
     perceptronforest = []
-
+    # Iterate through number of models
     for i in range(n_submodels):
+        # Randomize features
         random_features = util.randomize_features(features, n_features)
+        # Bootstrap dataset
         df_bootstrapped = bootstrapping(train_df, n_bootstrap)
-        X, Y = util.get_X_y_data(train_df, random_features, label)
+        # Get X Y data from random features and bootstraped df
+        X, Y = util.get_X_y_data(df_bootstrapped, random_features, label)
+        # Get Weights
         percept_w = perceptron.perceptron(
             X, Y, learning_rate, num_iterations)
-        perceptronforest.append(percept_w)
+        # return weights and random_features
+        perceptronforest.append(percept_w, random_features)
     return perceptron_forrest
+
+############ COMBINATION FOREST ###############
 
 
 def submodel_combination(train_df, features, label, n_submodels, n_bootstrap, n_features, max_depth, num_iterations, learning_rate):
@@ -111,19 +122,28 @@ def submodel_combination(train_df, features, label, n_submodels, n_bootstrap, n_
     forest = []
     perceptronforest = []
     i = 0
+    # Iterate through number of models
     for i in range(n_submodels):
+        # Randomize Features
         random_features = util.randomize_features(features, n_features)
+        # If were in the first half of models create decisions trees
         if (i < n_submodels/2):
             df_bootstrapped = bootstrapping(train_df, n_bootstrap)
             tree_id3 = decisiontree.ID3_decision_tree(
                 df_bootstrapped, random_features, label, max_depth, n_features)
             forest.append(tree_id3)
+        # If wee in the second half of models create mini perceptrons This way it is half perceptron
+        # half decision tree
         else:
             df_bootstrapped = bootstrapping(train_df, n_bootstrap)
+            # Split X y on Random_features
             X, Y = util.get_X_y_data(df_bootstrapped, random_features, label)
+            # Call perceptron
             percept_w = perceptron.perceptron(
                 X, Y, learning_rate, num_iterations)
-            perceptronforest.append(percept_w)
+            # Append trained weights and random features
+            # features are to make predictions later on.
+            perceptronforest.append(percept_w, random_features)
 
     return forest, perceptronforest
 
@@ -132,6 +152,8 @@ def final_prediction():
     """
     Tallies the predictions of the models and chooses the majority prediction
     """
+
+############# RANDOM FOREST ##############
 
 
 def random_forest_algorithm(train_df, features, label, n_trees, n_bootstrap, n_features, max_depth):
