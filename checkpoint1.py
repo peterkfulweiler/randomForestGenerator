@@ -10,6 +10,7 @@ import pandas as pd
 import random
 import sys
 import time
+from scipy import stats
 
 # Helper libraries
 import perceptron
@@ -67,27 +68,61 @@ def ID3_decision_tree_prediction():
 
 # Making predictions with only perceptrons
 
-def perceptron():
+def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_features, num_iterations, learning_rate):
     """
-    Perceptron algorithm that gets learned weights and average number of mistakes
-    per iteration
+    Creates a Random Perceptron Forest with a training dataset
+    returns features and weights
     """
+    perceptronforest = []
+    # Iterate through number of models
+    for i in range(n_submodels):
+        # Randomize features
+        random_features = util.randomize_features(features, n_features)
+        # Bootstrap dataset
+        df_bootstrapped = bootstrapping(train_df, n_bootstrap)
+        # Get X Y data from random features and bootstraped df
+        #print(random_features, ": Rand features")
+        X, Y = util.get_X_y_data(df_bootstrapped, random_features, label)
+        # Get Weights
+        #print(X, ": X")
+        percept_w = perceptron.perceptron(
+            X.transpose(), Y, learning_rate, num_iterations)
+        # return weights and random_features
+        perceptronforest.append([percept_w, random_features])
+        # print(random_features)
+    return perceptronforest
 
 
-def get_perceptron_all():
+def get_perceptron_all(df, forest, label):
     """
-    Get's perceptron predictions for all examples in a dataframe
+    Get's perceptron predictions for all examples in a dataframe "Votes" on most common vote.
+    inputs:
+    Df: df to test on
+    forest: List of weights and features subspace gotten for each submodel in the forrest.
     """
+    i = 0
+    predict = np.array([])
+    for i in range(len(forest)):
+        # Get features for specific model
+        # print("######### Forest shapes #########",forest[i][1], forest[i][0][0])
+        predictions = perceptron.get_perceptron_predictions(
+            df, forest[i][1], forest[i][0][0])
+        predict = np.append(predict, [predictions])
+    # Transpose
+    predicts = predictions.transpose()
+    finalpredictions = []
+    for x in range(len(predicts)):
+        # Find most common element for each example
+        vote = stats.mode(predicts[x])
+        # Append common element to final predicts
+        finalpredictions.append(vote[0][0])
 
+    # return final predictions
 
-def get_perceptron_prediction():
-    """
-    Get's perceptron prediction for one example in a dataframe
-    """
+    accuracy = perceptron.get_accuracy(df[label], finalpredictions)
+    return finalpredictions, accuracy
 
-# Making predictions with both perceptrons and decision trees
-
- ######## PERCEPTRON FOREST #############
+    ######## PERCEPTRON FOREST #############
 
 
 def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_features, num_iterations, learning_rate):
@@ -102,13 +137,53 @@ def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_fe
         # Bootstrap dataset
         df_bootstrapped = bootstrapping(train_df, n_bootstrap)
         # Get X Y data from random features and bootstraped df
+        #print(random_features, ": Rand features")
         X, Y = util.get_X_y_data(df_bootstrapped, random_features, label)
         # Get Weights
+        #print(X, ": X")
         percept_w = perceptron.perceptron(
-            X, Y, learning_rate, num_iterations)
+            X.transpose(), Y, learning_rate, num_iterations)
         # return weights and random_features
         perceptronforest.append([percept_w, random_features])
+        # print(random_features)
     return perceptronforest
+
+
+def get_hyper_parameters(train_df, test_df, features, label, num_iterations, learning_rate, num_models, num_straps, num_features):
+    """
+    Gets Best hyperparameters, num models num features, num iterations , and learning rate from a training dataset
+    also gets accuracy on testing with best hyperparameters
+    """
+    trainaccuracy, testaccuracy, bestnumiterations, best_lr = perceptron.test_perceptron(
+        train_df, test_df, features, label, num_iterations, learning_rate)
+    bestaccuracy = -1
+    best_model = None
+    best_num_features = None
+    for i in range(1, num_models):
+        for j in range(1, num_features):
+            forest = perceptron_forrest(
+                train_df, features, label, i, num_straps, j, bestnumiterations, best_lr)
+# print("############## Forest ################# ")
+#print(forest, ": Forest")
+# print(len(forest))
+            print("############## Predictions ################# ")
+            predictions, accuracy = get_perceptron_all(test_df, forest, label)
+            print("Number of Models: ", i, "Number of features: ",
+                  j, "Accuracy: ", accuracy)
+
+            if accuracy > bestaccuracy:
+                bestaccuracy = accuracy
+                best_model = i
+                best_num_features = j
+
+    print("Best Train Accuracy 1 Perceptron with all features: ", trainaccuracy)
+    forest = perceptron_forrest(train_df, features, label, best_model,
+                                num_straps, best_num_features, bestnumiterations, best_lr)
+    predictions, accuracy = get_perceptron_all(test_df, forest, label)
+    print("Best num of models: ", best_model,
+          "Best num features: ", best_num_features)
+    print("Best Testing Accuracy with 1 Perceptron model with all features: ", testaccuracy)
+    print("Best Testing Accuracy with Perceptron Forest with best hyperparameters: ", accuracy)
 
 ############ COMBINATION FOREST ###############
 

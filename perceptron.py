@@ -1,5 +1,6 @@
 
 
+from argon2 import Parameters
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import Perceptron
@@ -102,7 +103,7 @@ def get_perceptron_predictions(df, features, w):
     '''
     predictions = np.array([])
     df = df[features]
-    #w = w.transpose()
+    w = w.transpose()
     for idx in range(len(df)):
         x = np.array(df.iloc[idx])
         dot = np.dot(w, x)
@@ -208,3 +209,36 @@ def scikit_perceptron_cross_validation(df, num_folds, features, label, num_itera
     ####
 
     return sum(validation_accuracies) / num_folds
+
+
+learning_rate = 1
+num_folds = 5
+
+
+def test_perceptron(train_df, test_df, features, label, num_iterations, learning_rate):
+    best_num_iterations = None
+    best_accuracy = -1
+    best_lr = None
+    for k in num_iterations:
+        for lr in learning_rate:
+            validation_accuracy, validation_mistakes = perceptron_cross_validation(
+                train_df, num_folds, features, label, lr, k)
+            print('num_iterations:', k, ', validation accuracy:',
+                  validation_accuracy, ', validation mistakes:', validation_mistakes)
+            if validation_accuracy > best_accuracy:
+                best_accuracy = validation_accuracy
+                best_num_iterations = k
+                best_lr = lr
+
+# Accuracy on training and testing data
+    print('Best_Num_Iterations: ', best_num_iterations,
+          'Best Learning Rate: ', best_lr)
+    X, y = get_X_y_data(train_df, features, label)
+    w, train_mistakes = perceptron(X, y, best_lr, best_num_iterations)
+    predictions = get_perceptron_predictions(train_df, features, w)
+    train_accuracy = get_accuracy(train_df[label], predictions)
+    predictions = get_perceptron_predictions(test_df, features, w)
+    test_accuracy = get_accuracy(test_df[label], predictions)
+    print('train accuracy:', train_accuracy, ', test accuracy:', test_accuracy)
+
+    return train_accuracy, test_accuracy, best_num_iterations, best_lr

@@ -13,8 +13,9 @@ import numpy as np
 import pandas as pd
 import random
 
-
 ########################## Data helper functions #############################
+
+
 def load_data(filename):
     ''' Returns a dataframe (df) containing the data in filename. You should
         specify the full path plus the name of the file in filename, relative
