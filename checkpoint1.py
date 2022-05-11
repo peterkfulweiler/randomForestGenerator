@@ -127,7 +127,7 @@ def get_perceptron_all(df, forest, label):
 
 def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_features, num_iterations, learning_rate):
     """
-    Creates a Random Perceptron Forest with
+    Creates a Random Perceptron Forest with 
     """
     perceptronforest = []
     # Iterate through number of models
@@ -154,7 +154,7 @@ def get_hyper_parameters(train_df, test_df, features, label, num_iterations, lea
     Gets Best hyperparameters, num models num features, num iterations , and learning rate from a training dataset
     also gets accuracy on testing with best hyperparameters
     """
-    trainaccuracy, testaccuracy, bestnumiterations, best_lr = perceptron.test_perceptron(
+    trainaccuracy, testaccuracy, bestnumiterations = perceptron.test_perceptron(
         train_df, test_df, features, label, num_iterations, learning_rate)
     bestaccuracy = -1
     best_model = None
@@ -162,8 +162,7 @@ def get_hyper_parameters(train_df, test_df, features, label, num_iterations, lea
     for i in range(1, num_models):
         for j in range(1, num_features):
             forest = perceptron_forrest(
-                train_df, features, label, i, num_straps, j, bestnumiterations, best_lr)
-                
+                train_df, features, label, i, num_straps, j, bestnumiterations, learning_rate)
 # print("############## Forest ################# ")
 #print(forest, ": Forest")
 # print(len(forest))
@@ -179,7 +178,7 @@ def get_hyper_parameters(train_df, test_df, features, label, num_iterations, lea
 
     print("Best Train Accuracy 1 Perceptron with all features: ", trainaccuracy)
     forest = perceptron_forrest(train_df, features, label, best_model,
-                                num_straps, best_num_features, bestnumiterations, best_lr)
+                                num_straps, best_num_features, bestnumiterations, learning_rate)
     predictions, accuracy = get_perceptron_all(test_df, forest, label)
     print("Best num of models: ", best_model,
           "Best num features: ", best_num_features)
@@ -228,26 +227,6 @@ def final_prediction():
     """
     Tallies the predictions of the models and chooses the majority prediction
     """
-def get_random_forest_predictions(df, forest):
-    """ Inputs:
-    * df: a dataframe
-    * forest: a list of decision trees
-    Output:
-    * predictions: a list of predictions for each example by getting the majority
-    vote or mode of each prediction
-    """
-  # initalize dictionary for predictions
-  random_forest_predictions = {}
-  # loop through every forest
-  for i in range(len(forest)):
-    # make the column names
-    col_name = "dtree_{}".format(i)
-    # get predictions for each example for one decision tree
-    pred = ID3_decision_tree_all(forest[i],df)
-    # add the prediction to the dictionary
-    random_forest_predictions[col_name] = pred
-    pred_df = pd.DataFrame(random_forest_predictions)
-  return pred_df.mode(axis=1)[0]
 
 ############# RANDOM FOREST ##############
 
@@ -258,7 +237,7 @@ def random_forest_algorithm(train_df, features, label, n_trees, n_bootstrap, n_f
     * features:
     * n_trees...
     Output:
-    * forest: list of decision trees aka the random forest
+    * forest: list of decision trees aka the random forest 
     """
     forest = []
     for tree in range(n_trees):
