@@ -37,41 +37,14 @@ def bootstrapping(df, num_df):
         indices = np.random.randint(0, len(df), size=num_df)
         df_bootstrapped = df.iloc[indices]
     return df_bootstrapped
-# Everything for Decision Trees
 
-# Making predictions with only decision trees
+# Perceptron Forest,
 
-
-def build_decision_trees():
-    """
-    Builds a decision trees from each bootstrapped dataset using a
-    random subspace of the features (x features out of the total number of
-    features).
-    """
-
-
-def ID3_decision_tree_all():
-    """
-    Takes modified ID3 decision tree algorithm to make predictions for each
-    decision tree. This makes predictions for all examples in a dataframe
-    """
-
-
-def ID3_decision_tree_prediction():
-    """
-    Takes modified ID3 decision tree algorithm to make predictions for each
-    decision tree. This makes a prediction for one example in a dataframe.
-    """
-
-# Everything for Perceptrons
-
-
-# Making predictions with only perceptrons
 
 def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_features, num_iterations, learning_rate):
     """
     Creates a Random Perceptron Forest with a training dataset
-    returns features and weights
+    Returns features and weights as a list inside a list.
     """
     perceptronforest = []
     # Iterate through number of models
@@ -117,65 +90,41 @@ def get_perceptron_all(df, forest, label):
         # Append common element to final predicts
         finalpredictions.append(vote[0][0])
 
-    # return final predictions
-
+    # return final predictions and accuracy
     accuracy = perceptron.get_accuracy(df[label], finalpredictions)
     return finalpredictions, accuracy
-
-    ######## PERCEPTRON FOREST #############
-
-
-def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_features, num_iterations, learning_rate):
-    """
-    Creates a Random Perceptron Forest with 
-    """
-    perceptronforest = []
-    # Iterate through number of models
-    for i in range(n_submodels):
-        # Randomize features
-        random_features = util.randomize_features(features, n_features)
-        # Bootstrap dataset
-        df_bootstrapped = bootstrapping(train_df, n_bootstrap)
-        # Get X Y data from random features and bootstraped df
-        #print(random_features, ": Rand features")
-        X, Y = util.get_X_y_data(df_bootstrapped, random_features, label)
-        # Get Weights
-        #print(X, ": X")
-        percept_w = perceptron.perceptron(
-            X.transpose(), Y, learning_rate, num_iterations)
-        # return weights and random_features
-        perceptronforest.append([percept_w, random_features])
-        # print(random_features)
-    return perceptronforest
 
 
 def get_hyper_parameters(train_df, test_df, features, label, num_iterations, learning_rate, num_models, num_straps, num_features):
     """
     Gets Best hyperparameters, num models num features, num iterations , and learning rate from a training dataset
     also gets accuracy on testing with best hyperparameters
+    returns: test accuracy, accuracy, best number of models, best number of features, best number of iterations
     """
+    # Get Accuracies and iterations from a single perceptron
     trainaccuracy, testaccuracy, bestnumiterations = perceptron.test_perceptron(
         train_df, test_df, features, label, num_iterations, learning_rate)
+
     bestaccuracy = -1
     best_model = None
     best_num_features = None
+    # Iterate through number of models and number of features
     for i in range(1, num_models):
         for j in range(1, num_features):
+            # create forest
             forest = perceptron_forrest(
                 train_df, features, label, i, num_straps, j, bestnumiterations, learning_rate)
-# print("############## Forest ################# ")
-#print(forest, ": Forest")
-# print(len(forest))
             print("############## Predictions ################# ")
             predictions, accuracy = get_perceptron_all(test_df, forest, label)
             print("Number of Models: ", i, "Number of features: ",
                   j, "Accuracy: ", accuracy)
-
+            # Check if accuracy is larger than best accuracy
             if accuracy > bestaccuracy:
                 bestaccuracy = accuracy
                 best_model = i
                 best_num_features = j
 
+    # print all the best hyperparameters and accuracies.
     print("Best Train Accuracy 1 Perceptron with all features: ", trainaccuracy)
     forest = perceptron_forrest(train_df, features, label, best_model,
                                 num_straps, best_num_features, bestnumiterations, learning_rate)
@@ -185,8 +134,23 @@ def get_hyper_parameters(train_df, test_df, features, label, num_iterations, lea
     print("Best Testing Accuracy with 1 Perceptron model with all features: ", testaccuracy)
     print("Best Testing Accuracy with Perceptron Forest with best hyperparameters: ", accuracy)
 
+    return testaccuracy, accuracy, best_model, best_num_features, bestnumiterations
+
+
 ############ COMBINATION FOREST ###############
 
+######### WE NEVER USED THIS ALGORITHM #############
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+######################################################
 
 def submodel_combination(train_df, features, label, n_submodels, n_bootstrap, n_features, max_depth, num_iterations, learning_rate):
     """
@@ -222,38 +186,10 @@ def submodel_combination(train_df, features, label, n_submodels, n_bootstrap, n_
 
     return forest, perceptronforest
 
-
-def final_prediction():
-    """
-    Tallies the predictions of the models and chooses the majority prediction
-    """
-
 ############# RANDOM FOREST ##############
 
 
-def random_forest_algorithm(train_df, features, label, n_trees, n_bootstrap, n_features, max_depth):
-    """ Inputs:
-    * train_df: the training dataset
-    * features:
-    * n_trees...
-    Output:
-    * forest: list of decision trees aka the random forest 
-    """
-    forest = []
-    for tree in range(n_trees):
-        df_bootstrapped = bootstrapping(train_df, n_bootstrap)
-        tree_id3 = decisiontree.ID3_decision_tree(
-            df_bootstrapped, features, label, max_depth, n_features)
-        forest.append(tree_id3)
-    return forest
-
-
-# Data visualization
-
-
 """
-Will use a line plot to plot the accuracies, recall, and precision of each set of submodels for bagging.
-One set will be all decision trees. One set will be all perceptrons. The last Set
-will be half perceptrons and half decision trees. We will be using two datasets:
+We will be using two datasets:
 1 linearly separable data set and the other non-linearly separable data set.
 """
