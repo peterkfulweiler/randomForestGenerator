@@ -127,7 +127,7 @@ def get_perceptron_all(df, forest, label):
 
 def perceptron_forrest(train_df, features, label, n_submodels, n_bootstrap, n_features, num_iterations, learning_rate):
     """
-    Creates a Random Perceptron Forest with 
+    Creates a Random Perceptron Forest with
     """
     perceptronforest = []
     # Iterate through number of models
@@ -163,6 +163,7 @@ def get_hyper_parameters(train_df, test_df, features, label, num_iterations, lea
         for j in range(1, num_features):
             forest = perceptron_forrest(
                 train_df, features, label, i, num_straps, j, bestnumiterations, best_lr)
+                
 # print("############## Forest ################# ")
 #print(forest, ": Forest")
 # print(len(forest))
@@ -233,7 +234,7 @@ def get_random_forest_predictions(df, forest):
     * forest: a list of decision trees
     Output:
     * predictions: a list of predictions for each example by getting the majority
-    vote or mode of each prediction 
+    vote or mode of each prediction
     """
   # initalize dictionary for predictions
   random_forest_predictions = {}
