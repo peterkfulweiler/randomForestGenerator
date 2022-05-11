@@ -14,7 +14,6 @@ from scipy import stats
 
 # Helper libraries
 import perceptron
-import decisiontree
 import util
 
 """
@@ -114,8 +113,8 @@ def get_hyper_parameters(train_df, test_df, features, label, num_iterations, lea
             # create forest
             forest = perceptron_forrest(
                 train_df, features, label, i, num_straps, j, bestnumiterations, learning_rate)
-            print("############## Predictions ################# ")
-            predictions, accuracy = get_perceptron_all(test_df, forest, label)
+           # print("############## Predictions ################# ")
+            predictions, accuracy = get_perceptron_all(train_df, forest, label)
             print("Number of Models: ", i, "Number of features: ",
                   j, "Accuracy: ", accuracy)
             # Check if accuracy is larger than best accuracy
@@ -128,13 +127,14 @@ def get_hyper_parameters(train_df, test_df, features, label, num_iterations, lea
     print("Best Train Accuracy 1 Perceptron with all features: ", trainaccuracy)
     forest = perceptron_forrest(train_df, features, label, best_model,
                                 num_straps, best_num_features, bestnumiterations, learning_rate)
-    predictions, accuracy = get_perceptron_all(test_df, forest, label)
+    predictions, multiaccuracy = get_perceptron_all(test_df, forest, label)
     print("Best num of models: ", best_model,
           "Best num features: ", best_num_features)
     print("Best Testing Accuracy with 1 Perceptron model with all features: ", testaccuracy)
-    print("Best Testing Accuracy with Perceptron Forest with best hyperparameters: ", accuracy)
+    print("Best Training Accuracy with Perceptron Forest with best hyperparameters: ", bestaccuracy)
+    print("Best Testing Accuracy with Perceptron Forest with best hyperparameters: ", multiaccuracy)
 
-    return testaccuracy, accuracy, best_model, best_num_features, bestnumiterations
+    return trainaccuracy, testaccuracy, bestaccuracy, multiaccuracy, best_model, best_num_features, bestnumiterations
 
 
 ############ COMBINATION FOREST ###############
