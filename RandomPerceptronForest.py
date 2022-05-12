@@ -30,7 +30,7 @@ def bootstrapping(df, num_df):
     Takes a train dataset and gets x number random dataframe samples with replacement
     (i.e. some examples can be present in mulitple samples). Each bootstrapped
     dataset will have y number of examples.
-    Returns an array of subsets of the original dataframe
+    Returns a num_df sized subset of df
     """
     for i in range(num_df):
         indices = np.random.randint(0, len(df), size=num_df)
