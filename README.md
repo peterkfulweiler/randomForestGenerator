@@ -25,7 +25,7 @@ found in the file called COMP343_Final_Project_ID3_Random_Forest.ipynb
 - The data sets we used were the same
 
 1. First, upload the sonar data set and banknotes data set
-2. Run the entire code
+2. Run the entire code on google colab
 3. Code block 7 onwards has code to get the test and train accuracies of the model
 4. For each model, it will print the train and test accuracies as well as the
 the best depth from get_hyperparameters. After that, it will print the average test and train
